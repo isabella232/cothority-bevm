@@ -1,4 +1,4 @@
-module go.c4dt.org/omniledger
+module github.com/c4dt/omniledger
 
 require (
 	github.com/BurntSushi/toml v0.3.1
