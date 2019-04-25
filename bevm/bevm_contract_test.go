@@ -224,8 +224,8 @@ func Test_InvokeLoanContract(t *testing.T) {
 	var tokBal, bal *big.Int
 
 	// Initially, the guarantee is empty
-	tokBal, _ = getBalances(a, loanContract.Address)
 	initTokBalA, _ := getBalances(a, a.Address)
+	tokBal, _ = getBalances(a, loanContract.Address)
 	assertBigInt0(t, tokBal)
 
 	// Transfer tokens from A as a guarantee (A owns all the tokens as he deployed the Token contract)
@@ -233,8 +233,8 @@ func Test_InvokeLoanContract(t *testing.T) {
 	require.Nil(t, err)
 
 	tokBal, _ = getBalances(a, a.Address)
-	newTokBalA := new(big.Int).Sub(initTokBalA, guarantee)
-	require.Equal(t, newTokBalA, tokBal)
+	expected := new(big.Int).Sub(initTokBalA, guarantee)
+	require.Equal(t, expected, tokBal)
 
 	tokBal, _ = getBalances(a, loanContract.Address)
 	require.Equal(t, guarantee, tokBal)
@@ -250,8 +250,8 @@ func Test_InvokeLoanContract(t *testing.T) {
 	require.Nil(t, err)
 
 	_, bal = getBalances(a, a.Address)
-	newEtherBalA := new(big.Int).Add(initEtherBalA, loanAmount)
-	require.Equal(t, newEtherBalA, bal)
+	expected = new(big.Int).Add(initEtherBalA, loanAmount)
+	require.Equal(t, expected, bal)
 
 	// Pay back
 	_, initEtherBalB := getBalances(a, b.Address)
@@ -260,8 +260,8 @@ func Test_InvokeLoanContract(t *testing.T) {
 	require.Nil(t, err)
 
 	_, bal = getBalances(a, b.Address)
-	newEtherBalB := new(big.Int).Add(initEtherBalB, loanAmount)
-	require.Equal(t, newEtherBalB, bal)
+	expected = new(big.Int).Add(initEtherBalB, loanAmount)
+	require.Equal(t, expected, bal)
 }
 
 // bcTest is used here to provide some simple test structure for different

@@ -173,6 +173,7 @@ func (db *ServerByzDatabase) Dump() ([]byzcoin.StateChange, []string, error) {
 		if _, ok := keyMap[k]; ok {
 			return nil, nil, errors.New("Internal error: the set of changes produced by the EVM is not unique on keys")
 		}
+		keyMap[k] = true
 	}
 
 	// All good, let's sort by keys
