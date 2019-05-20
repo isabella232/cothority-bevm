@@ -11,7 +11,7 @@ import (
 // from the `contracts` directory.
 
 func init() {
-	_, err := onet.RegisterNewService("contracts", newService)
+	_, err := onet.RegisterNewService("bevm_contract", newService)
 	log.ErrFatal(err)
 }
 

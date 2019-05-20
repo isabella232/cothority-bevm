@@ -82,6 +82,54 @@ func Test_InvokeCreditAccounts(t *testing.T) {
 	}
 }
 
+func Test_InvokeCandyContract(t *testing.T) {
+	log.LLvl1("Candy")
+
+	// Create a new ledger and prepare for proper closing
+	bct := newBCTest(t)
+	bct.local.Check = onet.CheckNone
+	defer bct.Close()
+
+	// Spawn a new BEVM instance
+	instanceID, err := NewBEvm(bct.cl, bct.signer, bct.gDarc)
+	require.Nil(t, err)
+
+	// Create a new BEVM client
+	bevmClient, err := NewClient(bct.cl, bct.signer, instanceID)
+	require.Nil(t, err)
+
+	// Initialize an accounts
+	a, err := NewEvmAccount(testPrivateKeys[0])
+	require.Nil(t, err)
+
+	// Credit the account
+	err = bevmClient.CreditAccount(big.NewInt(5*WeiPerEther), a.Address)
+	require.Nil(t, err)
+
+	// Deploy a Candy contract
+	candySupply := big.NewInt(100)
+	candyContract, err := NewEvmContract(getContractPath(t, "Candy"))
+	require.Nil(t, err)
+	err = bevmClient.Deploy(txParams.GasLimit, txParams.GasPrice, 0, a, candyContract, candySupply)
+	require.Nil(t, err)
+
+	// Get initial candy balance
+	candyBalance := big.NewInt(0)
+	err = bevmClient.Call(a, &candyBalance, candyContract, "getRemainingCandies")
+	require.Nil(t, err)
+	require.Equal(t, candySupply, candyBalance)
+
+	// Eat 10 candies
+	err = bevmClient.Transaction(txParams.GasLimit, txParams.GasPrice, 0, a, candyContract, "eatCandy", big.NewInt(10))
+	require.Nil(t, err)
+
+	// Get remaining candies
+	expectedCandyBalance := big.NewInt(90)
+	err = bevmClient.Call(a, &candyBalance, candyContract, "getRemainingCandies")
+	require.Nil(t, err)
+	require.Equal(t, expectedCandyBalance, candyBalance)
+}
+
 func Test_InvokeTokenContract(t *testing.T) {
 	log.LLvl1("ERC20Token")
 

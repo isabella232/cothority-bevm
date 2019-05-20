@@ -92,7 +92,7 @@ func NewContractState(stateDb *state.StateDB) (*State, []byzcoin.StateChange, er
 func (c *contractBEvm) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Instruction, coins []byzcoin.Coin) (sc []byzcoin.StateChange, cout []byzcoin.Coin, err error) {
 	cout = coins
 
-	// COnvention for newly-spawned instances
+	// Convention for newly-spawned instances
 	instanceID := inst.DeriveID("")
 
 	stateDb, err := NewEvmDb(&c.State, rst, instanceID)
