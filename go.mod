@@ -1,4 +1,4 @@
-module github.com/c4dt/omniledger
+module github.com/c4dt/cothority-bevm
 
 require (
 	github.com/allegro/bigcache v1.2.0 // indirect
